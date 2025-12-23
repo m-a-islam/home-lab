@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      containers:
+      - name: jellyfin
+        image: jellyfin/jellyfin:latest
+        ports:
+        - containerPort: 8096
+        volumeMounts:
+        - name: media-storage
+          mountPath: /media  # Inside the container, movies will be here
+      volumes:
+      - name: media-storage
+        persistentVolumeClaim:
+          claimName: media-pvc  # This connects to your 1TB drive
